@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SANAD Admin — Dashboard</title>
+
+  <!-- Styles -->
+ <style>
+  :root{
+  --main:#0BA29D;
+  --accent:#00FFD1;
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --muted:#7b8a8a;
+  --text:#0f1720;
+  --danger:#ff4b4b;
+  --glass: rgba(255,255,255,0.6);
+}
+a{
+  text-decoration: none;
+}
+/* DARK THEME VARS */
+body.dark{
+  --bg:#0b0f12;
+  --card:#0f1518;
+  --muted:#9aa8a8;
+  --text:#e6eef0;
+  --glass: rgba(255,255,255,0.03);
+}
+
+/* Reset + base */
+*{
+  box-sizing:border-boxl
+}
+html,body{
+  height:100%
+}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--bg) 0%, #eaf3f0 100%);
+  color:var(--text);
+  font-family:Inter, ui-sans-serif, system-ui, "Poppins", sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  transition: background 300ms ease, color 300ms ease;
+}
+
+/* App layout */
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+/* Sidebar */
+.sidebar{
+  width:260px;
+  background:linear-gradient(180deg,var(--main),var(--main));
+  color:#fff;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  box-shadow: 6px 0 20px rgba(10,162,157,0.06);
+}.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}.brand-logo{
+  width:48px;
+  height:48px;
+  border-radius:10px;
+  object-fit:cover;
+  box-shadow:0 6px 18px rgba(0,0,0,0.12);
+}.brand-text h3{
+  margin:0;
+  font-size:18px;
+  letter-spacing:0.6px;
+}.brand-text small{
+  opacity:0.9;
+  color:rgba(255,255,255,0.9);
+}
+
+/* Menu */
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}.menu-item{
+  display:flex;
+  align-items:center;
+  gap:12px;padding:12px;
+  border-radius:10px;
+  cursor:pointer;color:rgba(255,255,255,0.95);
+  transition:all 180ms ease;
+}.menu-item .ico{
+  width:28px;text-align:center;
+}.menu-item .label{
+  font-weight:600;
+}.menu-item:hover{
+  transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,0.08);
+}.menu-item.active{
+  background:rgba(255,255,255,0.12);
+}
+
+/* Sidebar footer */
+.sidebar-footer{
+  margin-top:auto
+}
+.btn-ghost{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.12);
+  color:#fff;
+  padding:8px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* Main area */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Topbar */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 28px;
+  background:var(--card);
+  border-bottom:1px solid rgba(0,0,0,0.04);
+  gap:12px;
+  box-shadow:0 6px 20px rgba(16,24,40,0.03);
+  position:sticky;top:0;z-index:40;
+}
+.topbar .left{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+.btn-icon{
+  background:var(--glass);
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:16px;
+}
+.search{
+  display:flex;
+  align-items:center;
+  background:var(--glass);
+  padding:6px;
+  border-radius:10px;
+}.search input{
+  border:none;
+  background:transparent;
+  padding:8px 10px;
+  min-width:220px;
+  outline:none;
+  color:var(--text);
+}.search button{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  padding:6px;
+}
+
+/* Right side */
+.topbar .right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}.badge{
+  background:var(--danger);
+  color:white;
+  padding:2px 6px;
+  border-radius:8px;
+  font-size:12px;
+  margin-left:-8px;
+  margin-top:-8px;
+  position:relative;
+}.user-menu{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}.avatar{
+  width:40px;
+  height:40px;
+  border-radius:8px;
+  object-fit:cover;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}.user-info .name{
+  font-weight:600;
+  font-size:14px;
+}.user-info .role{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* Content */
+.content{
+  padding:28px;
+}
+
+/* Stats grid */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-bottom:22px;
+}.card{
+  background:var(--card);
+  border-radius:12px;
+  padding:16px;
+  box-shadow:0 8px 24px rgba(16,24,40,0.04);
+  transition:transform 180ms ease;
+}.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}.muted{
+  color:var(--muted);
+  font-size:13px;
+}.card-body h2{
+  margin:0;
+  font-size:20px;
+}.small-info{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:8px;
+}
+
+/* grid two columns */
+.grid-2{display:grid;grid-template-columns:2fr 1.2fr;gap:18px}
+
+/* Table */
+.table{
+  width:100%;
+  border-collapse:collapse;
+}.table thead th{
+  padding:10px;
+  background:var(--main);color:#fff;
+  border-radius:6px 6px 0 0;
+  text-align:left;
+}.table tbody td{
+  padding:12px;
+  border-bottom:1px solid rgba(0,0,0,0.04);
+}.table .chip{
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:600;
+  font-size:13px;
+}.chip.success{
+  background:linear-gradient(90deg,var(--accent),var(--accent));
+  color:var(--main);
+}.chip.warn{
+  background:#fff2c2;
+  color:var(--main);
+}
+
+/* actions */
+.actions{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+}.btn-sm{
+  padding:6px 10px;
+  border-radius:8px;
+  border:none;
+  background:rgba(15,23,36,0.06);
+  cursor:pointer;
+}.btn-sm.edit{
+  background:linear-gradient(90deg,#e6fff9,#d6fff2);
+  color:var(--main);
+  font-weight:600;
+}.btn-sm.danger{
+  background:linear-gradient(90deg,#ffdede,#ffb5b5);
+  color:var(--danger);
+  font-weight:600;
+}
+
+/* footer */
+.footer{display:flex;justify-content:space-between;align-items:center;padding:18px 6px;color:var(--muted);margin-top:18px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:flex;align-items:center;justify-content:center;padding:20px}
+.modal.hidden{display:none}
+.modal-card{width:420px;background:var(--card);padding:18px;border-radius:12px;box-shadow:0 12px 30px rgba(2,6,23,0.25)}
+.modal-card h3{margin:0 0 12px}
+.modal-card label{display:block;margin:8px 0;font-size:13px;color:var(--muted)}
+.modal-card input, .modal-card select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);margin-top:6px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.btn{background:var(--main);color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+.btn:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:10px;border-radius:8px}
+
+/* responsive */
+@media (max-width:1100px){
+  .stats-grid{
+    grid-template-columns:repeat(2,1fr);
+  }.grid-2{
+    grid-template-columns:1fr;
+  }.sidebar{
+    display:none;
+    position:fixed
+    ;z-index:600;
+  }.app.show-sidebar .sidebar{
+    display:flex;
+  }
+}
+@media (max-width:720px){
+  .stats-grid{
+    grid-template-columns:1fr;
+  }.topbar .search input{
+    min-width:120px;
+  }.brand-text h3{
+    font-size:16px;
+  }
+}
+
+/* small animations */
+.page-enter0
+{opacity:0;
+  transform:translateY(12px);
+}.page-enter-active{
+  opacity:1;transform:none;
+  transition:all 420ms cubic-bezier(.2,.9,.3,1);
+}.card:hover{
+  transform:translateY(-6px);
+}
+
+ </style>
+
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div id="app" class="app page-enter">
+
+    <!-- SIDEBAR -->
+
+
+    <!-- MAIN -->
+    <main class="main">
+    <div class="search">
+        <input id="searchInput" placeholder="Search users, reports..." />
+        <button class="btn-icon">🔍</button>
+    </div>
+      <!-- TOPBAR -->
+
+
+
+        <!-- CHART + RECENT -->
+        <section class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <h3>Doctors</h3>
+              <small class="muted">Latest events</small>
+            </div>
+            <div class="card-body no-pad">
+              <table class="table" id="usersTable">
+                <thead>
+                  <tr><th>User</th><th>Email</th><th>id</th><th>phone</th><th>pro</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-id="1">
+                    <td>Maryam Hussein</td>
+                    <td>Maryam@hussein.com</td>
+                    <td>1</td>
+                    <td>01122256832</td>
+                    <td>Autism</td>
+                    <td>Doctor</td>
+                    <td><span class="chip success">Active</span></td>
+                    <td class="actions">
+                      <button class="btn-sm edit">Edit</button>
+                      <button class="btn-sm danger delete">Delete</button>
+                    </td>
+                  </tr>
+                  <tr data-id="2">
+                    <td>addo Hassan</td>
+                    <td>abdo_hassan@mail.com</td>
+                    <td>955</td>
+                    <td>01288226773</td>
+                    <td>Muscle atrophy </td>
+                    <td>Doctor</td>
+                    <td><span class="chip warn">Pending</span></td>
+                    <td class="actions">
+                      <button class="btn-sm edit">Edit</button>
+                      <button class="btn-sm danger delete">Delete</button>
+                    </td>
+                  </tr>
+                  <tr data-id="3">
+                    <td>Fatma Nabil</td>
+                    <td>fatma@example.com</td>
+                    <td>5</td>
+                    <td>01288225773</td>
+                    <td>Alzheimer's</td>
+                    <td>Doctor</td>
+                    <td><span class="chip success">Active</span></td>
+                    <td class="actions">
+                      <button class="btn-sm edit">Edit</button>
+                      <button class="btn-sm danger delete">Delete</button>
+                    </td>
+                  </tr>
+                   <tr data-id="4">
+                    <td>addo Hassan</td>
+                    <td>abdo_hassan@mail.com</td>
+                    <td>955</td>
+                    <td>01288226773</td>
+                    <td>Muscle atrophy </td>
+                    <td>Doctor</td>
+                    <td><span class="chip warn">Pending</span></td>
+                    <td class="actions">
+                      <button class="btn-sm edit">Edit</button>
+                      <button class="btn-sm danger delete">Delete</button>
+                    </td>
+                  </tr>
+                  <tr data-id="5">
+                    <td>Fatma Nabil</td>
+                    <td>fatma@example.com</td>
+                    <td>5</td>
+                    <td>01288225773</td>
+                    <td>Alzheimer's</td>
+                    <td>Doctor</td>
+                    <td><span class="chip success">Active</span></td>
+                    <td class="actions">
+                      <button class="btn-sm edit">Edit</button>
+                      <button class="btn-sm danger delete">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOOTER -->
+       
+
+      </section>
+    </main>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Edit User</h3>
+      <label>Name<input id="mName" type="text" /></label>
+      <label>Email<input id="mEmail" type="email" /></label>
+      <label>id<input id="mEmail" type="number" /></label>
+      <label>phone<input id="mEmail" type="number" /></label>
+      <label>pro
+        <select id="mRole">
+          <option>Alzheimer's</option>
+          <option>Down syndrome</option>
+          <option>Muscle atrophy</option>
+        </select>
+      </label>
+
+      <div class="modal-actions">
+        <button id="mSave" class="btn">Save</button>
+        <button id="mCancel" class="btn-ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    /* ===== small helpers ===== */
+const el = (sel) => document.querySelector(sel);
+const els = (sel) => Array.from(document.querySelectorAll(sel));
+
+/* ===== theme & year setup ===== */
+
+
+
+/* ===== sidebar collapse & hamburger for mobile ===== */
+const collapseBtn = el('#collapseBtn');
+const sidebar = el('#sidebar');
+const hamburger = el('#hamburger');
+const app = el('#app');
+
+collapseBtn && collapseBtn.addEventListener('click', () => {
+  sidebar.style.width = sidebar.style.width === '80px' ? '' : '80px';
+  // hide labels when collapsed
+  const labels = els('.menu-item .label');
+  labels.forEach(l => l.style.display = (l.style.display === 'none' ? '' : 'none'));
+});
+
+hamburger && hamburger.addEventListener('click', () => {
+  app.classList.toggle('show-sidebar');
+});
+
+/* ===== Chart (Chart.js) ===== */
+const usersCtx = document.getElementById('usersChart');
+if (usersCtx) {
+  const usersChart = new Chart(usersCtx, {
+    type: 'line',
+    data: {
+      labels: ['Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov'],
+      datasets: [{
+        label: 'New Users',
+        data: [40,55,50,65,80,70,90,95,100,110,120,130],
+        borderColor: '#0BA29D',
+        backgroundColor: 'rgba(11,162,157,0.08)',
+        fill: true,
+        tension: 0.35,
+        pointRadius: 3,
+        pointHoverRadius:6
+      }]
+    },
+    options: {
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{beginAtZero:true, grid:{color:'rgba(0,0,0,0.03)'}},
+        x:{grid:{display:false}}
+      }
+    }
+  });
+}
+
+/* ===== Table actions: Edit + Delete (UI only) ===== */
+const modal = el('#modal');
+const mName = el('#mName');
+const mEmail = el('#mEmail');
+const mRole = el('#mRole');
+let editingRow = null;
+
+els('.edit').forEach(btn => btn.addEventListener('click', (e) => {
+  const row = e.target.closest('tr');
+  editingRow = row;
+  const cells = row.children;
+  mName.value = cells[0].textContent.trim();
+  mEmail.value = cells[1].textContent.trim();
+  mRole.value = cells[2].textContent.trim();
+  modal.classList.remove('hidden');
+}));
+
+el('#mCancel') && el('#mCancel').addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+el('#mSave') && el('#mSave').addEventListener('click', () => {
+  if (!editingRow) return;
+  editingRow.children[0].textContent = mName.value;
+  editingRow.children[1].textContent = mEmail.value;
+  editingRow.children[2].textContent = mRole.value;
+  modal.classList.add('hidden');
+});
+
+/* Delete row */
+els('.delete').forEach(btn => btn.addEventListener('click', (e) => {
+  const row = e.target.closest('tr');
+  row.animate([{opacity:1},{opacity:0}],{duration:220,fill:'forwards'});
+  setTimeout(()=> row.remove(), 240);
+}));
+
+/* small entry animation */
+window.addEventListener('load',()=>{
+  requestAnimationFrame(()=> {
+    document.querySelector('.app').classList.add('page-enter-active');
+  });
+});
+
+/* search filter */
+el('#searchInput') && el('#searchInput').addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  els('#usersTable tbody tr').forEach(r => {
+    const txt = r.textContent.toLowerCase();
+    r.style.display = txt.includes(q) ? '' : 'none';
+  });
+});
+
+  </script>
+</body>
+</html>
